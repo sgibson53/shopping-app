@@ -50,4 +50,9 @@ export class RecipeService {
     addIngredientsToShoppingLIst(ingredients: Ingredient[]) {
         this.slService.addIngredients(ingredients);
     }
+
+    replaceRecipes(recipes: Recipe[]) {
+        this.recipes = recipes;
+        this.recipesChanged.next(this.recipes.slice());
+    }
 }
