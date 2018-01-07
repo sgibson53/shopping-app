@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { DataStorageService } from '../../shared/data-storage.service';
-import { RecipeService } from '../../recipes/recipe.service';
-import { Recipe } from '../../recipes/recipe.model';
-import { AuthService } from '../../auth/auth.service';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+
+import * as fromApp from '../../store/app.reducers';
+import * as fromAuth from '../../auth/store/auth.reducers';
+import * as AuthActions from '../../auth/store/auth.actions';
+import * as RecipeActions from '../../recipes/store/recipe.actions';
 
 @Component({
   selector: 'app-header',
@@ -11,32 +14,25 @@ import { AuthService } from '../../auth/auth.service';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor(private dataStorageService: DataStorageService, private recipeService: RecipeService, private authService: AuthService) { }
+  authState: Observable<fromAuth.State>;
+
+  constructor(
+    private store: Store<fromApp.AppState>) { }
 
   ngOnInit() {
+    this.authState = this.store.select('auth');
   }
 
   onSaveData() {
-    this.dataStorageService.storeRecipes()
-      .subscribe((response: Response) => {
-        console.log(response);
-      });
+    this.store.dispatch(new RecipeActions.StoreRecipes());
   }
 
   onFetchData() {
-    this.dataStorageService.getRecipes()
-      .subscribe((recipes: Recipe[]) => {
-        for (const recipe of recipes) {
-          if (!recipe['ingredients']) {
-            recipe['ingredients'] = [];
-          }
-        }
-        this.recipeService.replaceRecipes(recipes);
-      });
+    this.store.dispatch(new RecipeActions.FetchRecipes());
   }
 
   onLogOut() {
-    this.authService.logout();
+    this.store.dispatch(new AuthActions.Logout());
   }
 
 }
