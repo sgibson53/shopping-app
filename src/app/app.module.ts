@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { RecipeService } from './recipes/recipe.service';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthGuard } from './auth/auth-guard.service';
 import { SharedModule } from './shared/shared.module';
@@ -28,7 +27,7 @@ import { environment } from '../environments/environment';
     AppComponent
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({appId: 'my-universal-app'}),
     AppRoutingModule,
     ShoppingListRoutingModule,
     AuthRoutingModule,

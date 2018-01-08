@@ -29,6 +29,8 @@ export class RecipeEditComponent implements OnInit {
     });
   }
 
+  get formData() { return <FormArray>this.recipeForm.get('Data'); }
+
   private initForm() {
     let recipeName = '';
     let recipeImagePath = '';
